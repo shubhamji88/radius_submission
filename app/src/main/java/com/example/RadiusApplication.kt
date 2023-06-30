@@ -13,7 +13,7 @@ class RadiusApplication: Application(){
         Realm.init(this);
 
         val configuration = RealmConfiguration.Builder()
-            .name("todo.db")
+            .name("radius.db")
             .deleteRealmIfMigrationNeeded()
             .schemaVersion(0)
             .allowQueriesOnUiThread(true)
