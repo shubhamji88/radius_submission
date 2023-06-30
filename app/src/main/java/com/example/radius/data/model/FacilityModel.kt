@@ -9,4 +9,15 @@ open class FacilityModel() : RealmModel {
     var facilityId: String = ""
     var name: String = ""
     var options: RealmList<OptionModel> = RealmList<OptionModel>()
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is FacilityModel) return false
+
+        if (facilityId != other.facilityId) return false
+        if (name != other.name) return false
+        if (options != other.options) return false
+
+        return true
+    }
 }

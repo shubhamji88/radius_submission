@@ -8,7 +8,6 @@ import com.example.radius.data.model.FacilityModel
 import com.example.radius.data.model.RadiusResponseModel
 import com.google.gson.annotations.SerializedName
 import io.realm.RealmList
-import io.realm.kotlin.ext.realmListOf
 
 data class RadiusResponseEntity(
     @SerializedName("exclusions")
@@ -18,23 +17,22 @@ data class RadiusResponseEntity(
 )
 
 fun RadiusResponseEntity.convertToModel(): RadiusResponseModel {
-    val convertedExclusionsList = exclusionsEntity.map { exclusionList ->
-        ExclusionListModel().apply {
-            this.exclusionList = RealmList<ExclusionModel>().apply {
-                exclusionList?.map { exclusion ->
-                    ExclusionModel().apply {
-                        this.facilityId =exclusion?.facilityIdEntity ?: ""
-                        this.optionsId=exclusion?.optionsIdEntity ?: ""
+    val convertedExclusionsRealmList = RealmList<ExclusionListModel>()
+    exclusionsEntity.forEach { exclusionList ->
+        val temp = ExclusionListModel().apply {
+            var tempList = RealmList<ExclusionModel>()
+            exclusionList?.forEach { entity ->
+                val tempEntity = ExclusionModel().apply {
+                        this.facilityId =entity?.facilityIdEntity ?: ""
+                        this.optionsId=entity?.optionsIdEntity ?: ""
                     }
-                } ?: emptyList()
+                tempList.add(tempEntity)
             }
+
+            this.exclusionList =tempList
+            }
+        convertedExclusionsRealmList.add(temp)
         }
-    }
-    val convertedExclusionsRealmList = RealmList<ExclusionListModel>().apply{
-        addAll(
-            convertedExclusionsList
-        )
-    }
     val convertedFacilities = facilitiesEntity.map { facility ->
         facility.convertToModel()
     }
